@@ -1,2 +1,3 @@
 # item-total-for-wc
-Simple plugin to display Item total in the order details page.
+
+This is a simple extension for WooCommerce to display Item total in the order details page.
