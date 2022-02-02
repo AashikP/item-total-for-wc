@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Item total for WooCommerce
  * Description: Simple plugin to display Item total in the order details page.
- * Version: 1.0.0
+ * Version: 1.0.1
  * Author: AashikP
  * Author URI: https://aashikp.com
  * Text Domain: item-total-for-wc
@@ -41,18 +41,20 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 		if ( ! is_int( $thepostid ) ) {
 			$thepostid = $post->ID;
 		}
-		$order       = wc_get_order( $thepostid );
-		$order_items = $order->get_items();
-		foreach ( $order->get_items() as $item_id => $item ) {
-			if ( $item['product_id'] === $product->id ) {
-				$price = $item['total_tax'] + $item['total'];
+		if ( ! wp_doing_ajax() ) {
+			$order       = wc_get_order( $thepostid );
+			$order_items = $order->get_items();
+			foreach ( $order->get_items() as $item_id => $item ) {
+				if ( $item['product_id'] === $product->id ) {
+					$price = $item['total_tax'] + $item['total'];
+				}
 			}
+			$test  = '<td class="item_total_cost">';
+			$test .= '<div class="view alignleft">';
+			$test .= wc_price( $price, array( 'currency' => $order->get_currency() ) );
+			$test .= '</span></div></td>';
+			echo $test;
 		}
-		$test  = '<td class="item_total_cost">';
-		$test .= '<div class="view">';
-		$test .= wc_price( $price, array( 'currency' => $order->get_currency() ) );
-		$test .= '</span></div></td>';
-		echo $test;
 	}
 	add_action( 'woocommerce_admin_order_item_values', 'ap_display_item_total' );
 }
